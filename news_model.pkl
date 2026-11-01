@@ -1,0 +1,20 @@
+
+import pickle
+
+# Load trained model
+model = pickle.load(open("news_model.pkl", "rb"))
+vectorizer = pickle.load(open("vectorizer.pkl", "rb"))
+
+print("FAKE NEWS DETECTOR")
+print("------------------")
+
+# Get news from user
+news = input("Enter a news message: ")
+
+# Convert news into numbers
+news_vector = vectorizer.transform([news])
+
+# Predict result
+prediction = model.predict(news_vector)
+
+print("\nDetection Result:", prediction[0])
