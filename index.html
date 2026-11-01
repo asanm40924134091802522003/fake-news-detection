@@ -1,0 +1,81 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fake News Detection</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: linear-gradient(135deg, #141e30, #243b55);
+            text-align: center;
+            padding: 50px 15px;
+            color: white;
+        }
+        .container {
+            background: white;
+            color: #222;
+            max-width: 550px;
+            margin: auto;
+            padding: 30px;
+            border-radius: 15px;
+        }
+        textarea {
+            width: 95%;
+            height: 150px;
+            padding: 10px;
+            border: 1px solid #aaa;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        button {
+            background: #2457d6;
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+        #result {
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>📰 Fake News Detection</h1>
+    <p>Check whether your news is Fake or Real</p>
+
+    <textarea id="news"
+    placeholder="Enter your news here..."></textarea>
+
+    <br>
+
+    <button onclick="checkNews()">Check News</button>
+
+    <div id="result"></div>
+    <p style="font-size:12px;color:gray">
+    Demo only – not a verified news checker.
+    </p>
+</div>
+
+<script>
+function checkNews() {
+    let news = document.getElementById("news").value;
+
+    if (news.trim() === "") {
+        document.getElementById("result").innerHTML =
+        "Please enter news!";
+        return;
+    }
+
+    document.getElementById("result").innerHTML =
+    "Demo website ready! Connect a trained ML model to verify this news.";
+}
+</script>
+
+</body>
+</html>
