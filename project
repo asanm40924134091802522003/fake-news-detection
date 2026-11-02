@@ -1,0 +1,75 @@
+
+from flask import Flask, request, jsonify, send_file
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.linear_model import LogisticRegression
+
+app = Flask(__name__)
+
+# Demo training dataset
+# 0 = REAL, 1 = FAKE
+texts = [
+    "Government announces new education policy",
+    "School examination results released today",
+    "Scientists discover new medicine",
+    "Weather department issues heavy rainfall warning",
+    "Bank warns customers not to share OTP",
+    "University announces examination timetable",
+    "Government releases official public notice",
+    "New hospital opens in the city",
+    "Police announce traffic safety guidelines",
+    "Official scholarship application notification",
+    "Forward this message to ten people and win money",
+    "Click here to get free money immediately",
+    "You won one crore rupees claim your prize",
+    "Share this secret message with everyone",
+    "Breaking news unbelievable miracle cure",
+    "Send your bank OTP to receive a reward",
+    "Free mobile phone click this unknown link",
+    "Earn thousands daily without doing any work",
+    "Forward this message or bad luck will come",
+    "Urgent click this link to claim lottery prize"
+]
+
+labels = [
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1
+]
+
+# Train model when application starts
+vectorizer = TfidfVectorizer(ngram_range=(1, 2))
+X = vectorizer.fit_transform(texts)
+
+model = LogisticRegression(max_iter=1000)
+model.fit(X, labels)
+
+
+@app.route("/")
+def home():
+    return send_file("index.html")
+
+
+@app.route("/predict", methods=["POST"])
+def predict():
+    data = request.get_json(silent=True) or {}
+    news = data.get("news", "").strip()
+
+    if not news:
+        return jsonify({"error": "Please enter news"}), 400
+
+    news_vector = vectorizer.transform([news])
+
+    prediction = int(model.predict(news_vector)[0])
+    probabilities = model.predict_proba(news_vector)[0]
+    confidence = round(float(max(probabilities)) * 100, 2)
+
+    result = "FAKE NEWS" if prediction == 1 else "REAL NEWS"
+
+    return jsonify({
+        "result": result,
+        "confidence": confidence,
+        "message": "This is a demo prediction, not verified news."
+    })
+
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
